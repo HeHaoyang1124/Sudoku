@@ -8,9 +8,30 @@ Sudoku::Sudoku()
 	sudoku = new unsigned[81];
 	memset(sudoku, 0, 81 * sizeof(unsigned));
 
+	available = new bool[81];
+	memset(available, true, 81 * sizeof(bool));
+
 	memset(box, 0, sizeof(box));
 
-	ptr = sudoku;
+	Input();
+
+	for (index = 0; index < 81; index++)
+	{
+		if (available[index])
+			break;
+	}
+
+	for (unsigned i = 0; i < 81; i++)
+	{
+		if (!available[i])
+		{
+			unsigned column = index % 9;
+			unsigned line = index / 9;
+			unsigned palace = column / 3 + 3 * (line / 3);
+			unsigned block = column % 3 + 3 * (line % 3);
+			box[palace][block] = sudoku[i];
+		}
+	}
 }
 
 void Sudoku::Print()
@@ -24,54 +45,124 @@ void Sudoku::Print()
 		printf("\n");
 	}
 	std::cin.get();
+	std::cout << std::endl;
 }
 
 void Sudoku::ex()
 {
-	(*ptr)++;
-	while (*ptr > 9)
+	sudoku[index]++;
+	while (sudoku[index] > 9)
 	{
-		*ptr = 0;
-		(*(--ptr))++;
+		sudoku[index] = 0;
+		unsigned column = index % 9;
+		unsigned line = index / 9;
+		unsigned palace = column / 3 + 3 * (line / 3);
+		unsigned block = column % 3 + 3 * (line % 3);
+		box[palace][block] = 0;
+
+		if (find_available(false))
+			sudoku[index]++;
 	}
 }
 
-bool Sudoku::check()
+bool Sudoku::Check()
 {
 	//get column, line
 	//    x     , y
-	unsigned column = (ptr - sudoku) % 9;
-	unsigned line = (ptr - sudoku) / 9;
+	unsigned column = index % 9;
+	unsigned line = index / 9;
 	unsigned palace = column / 3 + 3 * (line / 3);
 	unsigned block = column % 3 + 3 * (line % 3);
 
-	//check line
-	for (unsigned i = 0; i < column; i++)
+	//Check line
+	for (unsigned i = 0; i < 9; i++)
 	{
-		if (sudoku[i + 9 * line] == *ptr)
+		if (sudoku[i + 9 * line] == sudoku[index] && column != i)
 		{
 			return false;
 		}
 	}
 
 
-	//check column
-	for (unsigned i = 0; i < line; i++)
+	//Check column
+	for (unsigned i = 0; i < 9; i++)
 	{
-		if (sudoku[column + i * 9] == *ptr)
+		if (sudoku[column + i * 9] == sudoku[index] && line != i)
 		{
 			return false;
 		}
 	}
 
-	//check palace
-	for (unsigned i = 0; i < block; i++)
+	//Check palace
+	for (unsigned i = 0; i < 9; i++)
 	{
-		if (box[palace][i] == *ptr)
+		if (box[palace][i] == sudoku[index] && i != block)
 		{
 			return false;
 		}
 	}
-	box[palace][block] = *ptr;
+
+
+	box[palace][block] = sudoku[index];
 	return true;
+}
+
+void Sudoku::Input()
+{
+	for (int i = 0; i < 81; i++)
+	{
+		scanf_s("%d", &sudoku[i]);
+		if (sudoku[i] <= 9 && sudoku[i] >= 1)
+		{
+			available[i] = false;
+		}
+		else
+		{
+			sudoku[i] = 0;
+		}
+	}
+}
+
+bool Sudoku::find_available(bool afterthis)
+{
+	if (afterthis == true)
+	{
+		while (available[++index] == false && index < 80) {}
+		if (available[index] == true)
+			return true;
+		else return false;
+
+	}
+
+	else
+	{
+		while (available[--index] == false && index > 0) {}
+		if (available[index] == true)
+			return true;
+		else return false;
+	}
+}
+
+void Sudoku::Solve()
+{
+	while (sudoku[0] <= 9)
+	{
+		ex();
+		//s.Print();
+
+		if (Check())
+		{
+			if (index < 80)
+			{
+				if (find_available(true))
+					continue;
+			}
+			else if (index == 80)
+			{
+
+				Print();
+				break;
+			}
+		}
+	}
 }

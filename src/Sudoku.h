@@ -8,14 +8,20 @@ public:
 	unsigned* sudoku;
 	unsigned  box[9][9];
 
-	unsigned* ptr;
+	unsigned index;
+
+	bool* available;
 
 public:
 	Sudoku();
 
 	void ex();
-	bool check();
+	bool Check();
 	void Print();
+	void Input();
 
+	bool find_available(bool afterthis = true);
+
+	void Solve();
 };
 
