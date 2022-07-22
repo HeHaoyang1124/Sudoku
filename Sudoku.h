@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-
+#include "Timer.h"
 class Sudoku
 {
 public:

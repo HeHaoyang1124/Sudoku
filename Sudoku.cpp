@@ -25,8 +25,8 @@ Sudoku::Sudoku()
 	{
 		if (!available[i])
 		{
-			unsigned column = index % 9;
-			unsigned line = index / 9;
+			unsigned column = i % 9;
+			unsigned line = i / 9;
 			unsigned palace = column / 3 + 3 * (line / 3);
 			unsigned block = column % 3 + 3 * (line % 3);
 			box[palace][block] = sudoku[i];
@@ -115,6 +115,12 @@ void Sudoku::Input()
 		if (sudoku[i] <= 9 && sudoku[i] >= 1)
 		{
 			available[i] = false;
+
+			unsigned column = i % 9;
+			unsigned line = i / 9;
+			unsigned palace = column / 3 + 3 * (line / 3);
+			unsigned block = column % 3 + 3 * (line % 3);
+			box[palace][block] = sudoku[i];
 		}
 		else
 		{
@@ -145,10 +151,11 @@ bool Sudoku::find_available(bool afterthis)
 
 void Sudoku::Solve()
 {
+	//Timer T;
 	while (sudoku[0] <= 9)
 	{
 		ex();
-		//s.Print();
+		//Print();
 
 		if (Check())
 		{

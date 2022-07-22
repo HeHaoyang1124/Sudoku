@@ -16,5 +16,6 @@ public:
 	{
 		end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> Duration = end - start;
+		std::cout << Duration.count() << std::endl;
 	}
 };
