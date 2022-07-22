@@ -1,27 +1,27 @@
 #pragma once
+#include "Timer.h"
 #include <iostream>
 #include <vector>
-#include "Timer.h"
-class Sudoku
-{
+class Sudoku {
 public:
-	unsigned* sudoku;
-	unsigned  box[9][9];
+  unsigned *sudoku;
+  unsigned box[9][9];
 
-	unsigned index;
+  unsigned index;
 
-	bool* available;
+  bool *available;
+
+  bool OK;
 
 public:
-	Sudoku();
+  Sudoku();
 
-	void ex();
-	bool Check();
-	void Print();
-	void Input();
+  void ex();
+  bool Check();
+  void Print();
+  void Input();
 
-	bool find_available(bool afterthis = true);
+  bool find_available(bool afterthis = true);
 
-	void Solve();
+  void Solve();
 };
-
